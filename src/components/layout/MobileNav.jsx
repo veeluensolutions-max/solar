@@ -10,7 +10,8 @@ import {
   Settings,
   X,
   SunMedium,
-  Shield
+  Shield,
+  LogOut
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 
@@ -21,6 +22,7 @@ export const MobileNav = () => {
     mobileMenuOpen,
     setMobileMenuOpen,
     settings,
+    logout,
   } = useApp();
 
   if (!mobileMenuOpen) return null;
@@ -96,18 +98,31 @@ export const MobileNav = () => {
           </nav>
         </div>
 
-        {/* Rodapé Usuário */}
-        <div className="pt-4 border-t border-white/[0.06] flex items-center gap-3">
-          <div className="w-9 h-9 rounded-full bg-slate-800 border border-white/10 flex items-center justify-center font-bold text-xs text-amber-200">
-            LM
+        {/* Rodapé Usuário & Logout */}
+        <div className="pt-4 border-t border-white/[0.06] flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-full bg-slate-800 border border-[#D4A017]/30 flex items-center justify-center font-bold text-xs text-[#E8A735]">
+              LM
+            </div>
+            <div>
+              <p className="text-xs font-semibold text-white">Lucas Mendes</p>
+              <p className="text-[11px] text-slate-400 flex items-center gap-1">
+                <Shield className="w-3 h-3 text-[var(--color-primary)]" />
+                Administrador
+              </p>
+            </div>
           </div>
-          <div>
-            <p className="text-xs font-semibold text-white">Lucas Mendes</p>
-            <p className="text-[11px] text-slate-400 flex items-center gap-1">
-              <Shield className="w-3 h-3 text-[var(--color-primary)]" />
-              Administrador
-            </p>
-          </div>
+
+          <button
+            onClick={() => {
+              setMobileMenuOpen(false);
+              logout();
+            }}
+            title="Sair do sistema"
+            className="p-2 rounded-lg text-rose-400/80 hover:text-rose-300 hover:bg-rose-500/10 transition-colors"
+          >
+            <LogOut className="w-4 h-4" />
+          </button>
         </div>
       </div>
     </div>

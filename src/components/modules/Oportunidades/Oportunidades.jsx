@@ -20,6 +20,7 @@ export const Oportunidades = () => {
   const [draggedOppId, setDraggedOppId] = useState(null);
   const [activeDragOverColumn, setActiveDragOverColumn] = useState(null);
   const [selectedOpp, setSelectedOpp] = useState(null);
+  const [mobileActiveStage, setMobileActiveStage] = useState('todos');
 
   // As 5 colunas obrigatórias
   const columns = [
@@ -66,14 +67,14 @@ export const Oportunidades = () => {
   };
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-4 sm:space-y-5">
       {/* Topo do Pipeline */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-white font-sans">
+          <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-white font-sans">
             Pipeline Comercial
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-slate-400 mt-0.5">
             Arraste os cards entre as etapas para atualizar o ciclo de vendas
           </p>
         </div>
@@ -87,9 +88,42 @@ export const Oportunidades = () => {
         </button>
       </div>
 
-      {/* Grid de Colunas Kanban */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 items-start overflow-x-auto pb-4">
-        {columns.map((col) => {
+      {/* Seletor de Etapas Exclusivo para Mobile (Smartphone) */}
+      <div className="md:hidden flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar">
+        <button
+          onClick={() => setMobileActiveStage('todos')}
+          className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors ${
+            mobileActiveStage === 'todos'
+              ? 'bg-[var(--color-primary)] text-slate-950'
+              : 'bg-white/[0.04] text-slate-400 hover:text-white'
+          }`}
+        >
+          Todas ({opportunities.length})
+        </button>
+        {columns.map((c) => {
+          const count = opportunities.filter((o) => o.stage === c.id).length;
+          const isActive = mobileActiveStage === c.id;
+          return (
+            <button
+              key={c.id}
+              onClick={() => setMobileActiveStage(c.id)}
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors ${
+                isActive
+                  ? 'bg-[var(--color-primary)] text-slate-950'
+                  : 'bg-white/[0.04] text-slate-400 hover:text-white'
+              }`}
+            >
+              {c.title} ({count})
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Grid de Colunas Kanban Adaptado */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4 items-start pb-4">
+        {columns
+          .filter((col) => mobileActiveStage === 'todos' || col.id === mobileActiveStage)
+          .map((col) => {
           const colOpportunities = opportunities.filter((opp) => opp.stage === col.id);
           const totalValue = calculateColumnTotal(col.id);
           const isDragOver = activeDragOverColumn === col.id;

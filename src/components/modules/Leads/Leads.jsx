@@ -177,8 +177,77 @@ export const Leads = () => {
         </div>
       </div>
 
-      {/* Tabela de Leads */}
-      <div className="rounded-xl bg-[#0F1626]/90 border border-white/[0.07] overflow-hidden shadow-sm">
+      {/* Visualização de Leads em Cards para Smartphone (Mobile Friendly) */}
+      <div className="sm:hidden space-y-3">
+        {filteredLeads.length === 0 ? (
+          <div className="p-6 text-center text-xs text-slate-400 bg-[#0F1626]/60 rounded-xl border border-white/[0.06]">
+            Nenhum lead encontrado com os filtros atuais.
+          </div>
+        ) : (
+          filteredLeads.map((lead) => (
+            <div
+              key={lead.id}
+              className="p-4 rounded-xl bg-[#0F1626]/90 border border-white/[0.07] space-y-3 shadow-sm"
+            >
+              <div className="flex items-start justify-between gap-2">
+                <div>
+                  <h4 className="text-sm font-bold text-white leading-tight">
+                    {lead.name}
+                  </h4>
+                  <p className="text-[11px] text-slate-400 mt-0.5">
+                    {lead.company} • {lead.city}
+                  </p>
+                </div>
+                {getStatusBadge(lead.status)}
+              </div>
+
+              <div className="flex items-center justify-between text-xs pt-1 border-t border-white/[0.04]">
+                <div>
+                  <span className="text-[10px] text-slate-500 block">Conta Mensal</span>
+                  <span className="font-mono font-bold text-amber-300">
+                    R$ {lead.monthlyBill?.toLocaleString('pt-BR') || '750'}
+                  </span>
+                </div>
+
+                <div>
+                  <span className="text-[10px] text-slate-500 block">Origem</span>
+                  {getOriginBadge(lead.origin)}
+                </div>
+
+                <div className="text-right">
+                  <span className="text-[10px] text-slate-500 block">Responsável</span>
+                  <span className="text-[11px] text-slate-300 font-medium">
+                    {lead.responsible}
+                  </span>
+                </div>
+              </div>
+
+              {/* Botões de Ação Mobile */}
+              <div className="pt-2 flex items-center justify-between gap-2 border-t border-white/[0.04]">
+                <a
+                  href={`tel:${lead.phone}`}
+                  className="flex-1 inline-flex items-center justify-center gap-1.5 py-2 rounded-lg bg-white/[0.04] text-slate-200 text-xs font-semibold hover:bg-white/[0.08] transition-colors"
+                >
+                  <Phone className="w-3.5 h-3.5 text-slate-400" />
+                  <span>{lead.phone}</span>
+                </a>
+
+                <button
+                  type="button"
+                  onClick={() => setSelectedLeadForWhatsApp(lead)}
+                  className="flex-1 inline-flex items-center justify-center gap-1.5 py-2 rounded-lg bg-emerald-600/20 text-emerald-400 text-xs font-bold border border-emerald-500/30 hover:bg-emerald-600/30 transition-colors"
+                >
+                  <MessageCircle className="w-3.5 h-3.5 stroke-[2.5]" />
+                  <span>WhatsApp</span>
+                </button>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+
+      {/* Tabela Tradicional de Leads para Tablet e Desktop */}
+      <div className="hidden sm:block rounded-xl bg-[#0F1626]/90 border border-white/[0.07] overflow-hidden shadow-sm">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
             <thead>

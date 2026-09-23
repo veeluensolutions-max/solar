@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { CustomizationModal } from '../common/CustomizationModal';
+import { VelliaIconSymbol } from '../common/VelliaLogo';
 
 export const Header = () => {
   const {
@@ -34,6 +35,7 @@ export const Header = () => {
   const [isCustomModalOpen, setIsCustomModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isMobileSearchActive, setIsMobileSearchActive] = useState(false);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
 
@@ -125,9 +127,9 @@ export const Header = () => {
 
   return (
     <>
-      <header className="sticky top-0 z-30 h-16 w-full bg-[#080B12]/90 backdrop-blur-md border-b border-white/[0.06] px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
-        {/* Lado Esquerdo: Mobile Trigger */}
-        <div className="flex items-center gap-3">
+      <header className="sticky top-0 z-30 h-16 w-full bg-[#080B12]/90 backdrop-blur-md border-b border-white/[0.06] px-3 sm:px-6 lg:px-8 flex items-center justify-between gap-2 sm:gap-4">
+        {/* Lado Esquerdo: Mobile Trigger & Logo no Mobile */}
+        <div className="flex items-center gap-2 sm:gap-3">
           <button
             onClick={() => setMobileMenuOpen(true)}
             className="lg:hidden p-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/[0.05]"
@@ -135,9 +137,20 @@ export const Header = () => {
           >
             <Menu className="w-5 h-5" />
           </button>
+
+          {/* Logo compacto apenas em Telas Pequenas */}
+          <div className="flex items-center gap-1.5 lg:hidden">
+            <div className="w-7 h-7 rounded-lg bg-gradient-to-b from-[#182032] to-[#0A0E18] border border-[#D4A017]/40 p-1 flex items-center justify-center">
+              <VelliaIconSymbol className="w-4 h-4" />
+            </div>
+            <div className="flex items-baseline gap-1">
+              <span className="text-xs font-black tracking-wider text-white">VELLIA</span>
+              <span className="text-xs font-bold tracking-wider text-[#E8A735]">SOLAR</span>
+            </div>
+          </div>
         </div>
 
-        {/* Centro: Campo de Busca Global Inteligente e Ativo */}
+        {/* Centro: Campo de Busca Global Inteligente Desktop */}
         <div ref={searchRef} className="flex-1 max-w-md mx-auto hidden sm:block relative">
           <div className="relative">
             <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
@@ -211,8 +224,17 @@ export const Header = () => {
         </div>
 
         {/* Lado Direito: Ações */}
-        <div className="flex items-center gap-4">
-          {/* Botão de Personalização Rápida */}
+        <div className="flex items-center gap-2 sm:gap-4">
+          {/* Botão de Busca Rápida apenas em Telas Pequenas */}
+          <button
+            onClick={() => setIsMobileSearchActive(!isMobileSearchActive)}
+            className="sm:hidden p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/[0.05] transition-colors"
+            title="Buscar"
+          >
+            <Search className="w-4 h-4" />
+          </button>
+
+          {/* Botão de Personalização Rápida Desktop */}
           <button
             onClick={() => setIsCustomModalOpen(true)}
             title="Personalize para o seu cliente"
@@ -239,7 +261,7 @@ export const Header = () => {
 
             {/* Painel Flutuante de Notificações */}
             {isNotificationOpen && (
-              <div className="absolute right-0 mt-2 w-80 rounded-2xl bg-[#0D121F] border border-white/10 shadow-2xl p-3 z-50 animate-in fade-in zoom-in-95 duration-150">
+              <div className="absolute right-0 mt-2 w-80 max-w-[calc(100vw-24px)] rounded-2xl bg-[#0D121F] border border-white/10 shadow-2xl p-3 z-50 animate-in fade-in zoom-in-95 duration-150">
                 <div className="flex items-center justify-between pb-2 border-b border-white/[0.06]">
                   <span className="text-xs font-bold text-white tracking-wide">
                     Notificações Comerciais
@@ -333,19 +355,75 @@ export const Header = () => {
             )}
           </div>
 
-          {/* Botão + Novo Lead Dourado */}
+          {/* Botão + Novo Lead Dourado (Apenas Desktop / Tablet, no mobile usa o botão central inferior) */}
           <button
             onClick={() => setIsNewLeadModalOpen(true)}
             style={{
               background: 'linear-gradient(180deg, #F3B33D 0%, #D49422 100%)',
             }}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-slate-950 font-bold text-xs shadow-sm hover:brightness-105 active:scale-95 transition-all"
+            className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-slate-950 font-bold text-xs shadow-sm hover:brightness-105 active:scale-95 transition-all"
           >
             <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
             <span>Novo Lead</span>
           </button>
         </div>
       </header>
+
+      {/* Barra de Busca Expansível em Mobile */}
+      {isMobileSearchActive && (
+        <div className="sm:hidden px-3 py-2 bg-[#0C111C] border-b border-white/[0.08] animate-in slide-in-from-top-2 duration-150">
+          <div className="relative">
+            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+            <input
+              type="text"
+              autoFocus
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Buscar no sistema..."
+              className="w-full h-9 rounded-lg bg-[#141C2D] border border-white/[0.08] focus:border-[#D4A017] pl-9 pr-8 text-xs text-white placeholder-slate-400 focus:outline-none"
+            />
+            <button
+              onClick={() => {
+                setSearchQuery('');
+                setIsMobileSearchActive(false);
+              }}
+              className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white p-1"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          </div>
+
+          {/* Resultados no Mobile */}
+          {searchQuery.trim() !== '' && (
+            <div className="mt-2 rounded-xl bg-[#0F1626] border border-white/10 p-2 max-h-56 overflow-y-auto divide-y divide-white/[0.04]">
+              {searchResults.length === 0 ? (
+                <div className="p-3 text-center text-xs text-slate-500">
+                  Nenhum resultado para "{searchQuery}"
+                </div>
+              ) : (
+                searchResults.map((item) => (
+                  <div
+                    key={`${item.type}-${item.id}`}
+                    onClick={() => {
+                      handleSelectSearchResult(item.tab);
+                      setIsMobileSearchActive(false);
+                    }}
+                    className="p-2 flex items-center justify-between text-xs"
+                  >
+                    <div>
+                      <span className="font-semibold text-white block">{item.title}</span>
+                      <span className="text-[10px] text-slate-400 block">{item.sub}</span>
+                    </div>
+                    <span className="text-[10px] px-2 py-0.5 rounded bg-white/[0.05] text-[#E8A735]">
+                      {item.type}
+                    </span>
+                  </div>
+                ))
+              )}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Modal Flutuante de Personalização */}
       <CustomizationModal

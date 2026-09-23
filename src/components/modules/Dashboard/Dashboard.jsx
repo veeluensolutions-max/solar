@@ -209,31 +209,33 @@ export const Dashboard = () => {
         </div>
       </div>
 
-      {/* 4 Cards de Indicadores com Micro-animações e Valores Reativos */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* 4 Cards de Indicadores com Micro-animações e Valores Reativos (2 por linha no Mobile) */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
         {kpis.map((kpi) => {
           const Icon = kpi.icon;
           return (
             <div
               key={kpi.title + selectedPeriod + selectedSeller}
-              className="rounded-2xl bg-[#101622] border border-white/[0.07] p-5 shadow-sm hover:border-[#D4A017]/50 hover:bg-[#131B2C] hover:scale-[1.01] active:scale-[0.99] transition-all duration-200 group cursor-default animate-in fade-in zoom-in-95"
+              className="rounded-xl sm:rounded-2xl bg-[#101622] border border-white/[0.07] p-3 sm:p-5 shadow-sm hover:border-[#D4A017]/50 hover:bg-[#131B2C] hover:scale-[1.01] active:scale-[0.99] transition-all duration-200 group cursor-default animate-in fade-in zoom-in-95 flex flex-col justify-between"
             >
-              <div className="flex items-center gap-3">
-                <Icon className="w-5 h-5 text-[#E8A735] group-hover:scale-110 transition-transform" />
-                <span className="text-xs font-normal text-slate-300">
-                  {kpi.title}
-                </span>
+              <div>
+                <div className="flex items-center gap-2 sm:gap-3">
+                  <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-[#E8A735] flex-shrink-0" />
+                  <span className="text-[11px] sm:text-xs font-normal text-slate-300 truncate">
+                    {kpi.title}
+                  </span>
+                </div>
+
+                <div className="mt-2 sm:mt-3 text-lg sm:text-2xl lg:text-[26px] font-bold text-white tracking-tight font-sans truncate">
+                  {kpi.value}
+                </div>
               </div>
 
-              <div className="mt-3 text-2xl lg:text-[26px] font-bold text-white tracking-tight font-sans">
-                {kpi.value}
-              </div>
-
-              <div className="mt-2.5 flex items-center gap-2 text-xs">
-                <span className="inline-flex items-center text-emerald-400 font-semibold bg-emerald-500/10 px-1.5 py-0.5 rounded text-[11px]">
+              <div className="mt-2 flex items-center gap-1.5 text-[10px] sm:text-xs">
+                <span className="inline-flex items-center text-emerald-400 font-semibold bg-emerald-500/10 px-1 py-0.5 rounded text-[10px] sm:text-[11px]">
                   {kpi.growth}
                 </span>
-                <span className="text-slate-500 text-[11px]">{kpi.subtext}</span>
+                <span className="text-slate-500 text-[10px] sm:text-[11px] truncate">{kpi.subtext}</span>
               </div>
             </div>
           );
@@ -241,7 +243,7 @@ export const Dashboard = () => {
       </div>
 
       {/* Grid: Gráfico Principal de Desempenho Comercial + Funil de Vendas */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 items-stretch">
         <div className="lg:col-span-2">
           <CommercialChart />
         </div>
@@ -250,16 +252,16 @@ export const Dashboard = () => {
         </div>
       </div>
 
-      {/* Tabela de Oportunidades em Andamento */}
-      <div className="rounded-2xl bg-[#101622] border border-white/[0.07] p-5 shadow-sm">
-        <div className="flex items-center justify-between pb-4 border-b border-white/[0.06]">
+      {/* Tabela / Cards de Oportunidades em Andamento */}
+      <div className="rounded-2xl bg-[#101622] border border-white/[0.07] p-4 sm:p-5 shadow-sm">
+        <div className="flex items-center justify-between pb-3 sm:pb-4 border-b border-white/[0.06]">
           <div className="flex items-center gap-2">
-            <h3 className="text-sm font-semibold text-white tracking-wide">
+            <h3 className="text-xs sm:text-sm font-semibold text-white tracking-wide">
               Oportunidades em andamento
             </h3>
             {selectedSeller !== 'Toda a Equipe' && (
-              <span className="text-[10px] font-bold text-[#E8A735] bg-[#D4A017]/15 px-2 py-0.5 rounded">
-                Filtrado: {selectedSeller}
+              <span className="text-[10px] font-bold text-[#E8A735] bg-[#D4A017]/15 px-2 py-0.5 rounded hidden sm:inline-block">
+                {selectedSeller}
               </span>
             )}
           </div>
@@ -273,8 +275,42 @@ export const Dashboard = () => {
           </button>
         </div>
 
-        {/* Tabela */}
-        <div className="overflow-x-auto mt-2">
+        {/* Versão Mobile em Cards */}
+        <div className="sm:hidden divide-y divide-white/[0.04] mt-2">
+          {opportunitiesData.length === 0 ? (
+            <div className="py-4 text-center text-xs text-slate-500">
+              Nenhuma oportunidade ativa.
+            </div>
+          ) : (
+            opportunitiesData.map((row, idx) => (
+              <div
+                key={idx}
+                onClick={() => setActiveTab('oportunidades')}
+                className="py-3 flex items-center justify-between gap-3 active:bg-white/[0.02]"
+              >
+                <div>
+                  <span className="text-xs font-semibold text-white block">
+                    {row.client}
+                  </span>
+                  <span className="text-[11px] text-slate-400 block mt-0.5">
+                    {row.project} • {row.power}
+                  </span>
+                </div>
+                <div className="text-right">
+                  <span className="text-xs font-mono font-bold text-[#E8A735] block">
+                    {row.value}
+                  </span>
+                  <span className={`inline-block px-2 py-0.5 rounded text-[10px] font-medium mt-1 ${row.stageColor}`}>
+                    {row.stage}
+                  </span>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+
+        {/* Versão Desktop / Tablet em Tabela */}
+        <div className="hidden sm:block overflow-x-auto mt-2">
           <table className="w-full text-left text-xs">
             <thead>
               <tr className="border-b border-white/[0.04] text-slate-400 font-normal">

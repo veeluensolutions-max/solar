@@ -123,8 +123,64 @@ export const Propostas = () => {
         </div>
       </div>
 
-      {/* Tabela de Propostas com ação de Visualizar */}
-      <div className="rounded-xl bg-[#0F1626]/90 border border-white/[0.07] overflow-hidden shadow-sm">
+      {/* Visualização Mobile em Cards para Smartphone */}
+      <div className="sm:hidden space-y-3">
+        {proposals.map((prop) => (
+          <div
+            key={prop.id}
+            onClick={() => setSelectedProposalForView(prop)}
+            className="p-4 rounded-xl bg-[#0F1626]/90 border border-white/[0.07] space-y-2.5 shadow-sm active:bg-white/[0.02] cursor-pointer"
+          >
+            <div className="flex items-start justify-between gap-2">
+              <div>
+                <h4 className="text-sm font-bold text-white leading-tight">
+                  {prop.client}
+                </h4>
+                <p className="text-[11px] text-slate-400 mt-0.5">
+                  {prop.project} • {prop.responsible}
+                </p>
+              </div>
+              {getStatusBadge(prop.status)}
+            </div>
+
+            <div className="flex items-center justify-between text-xs pt-1 border-t border-white/[0.04]">
+              <div>
+                <span className="text-[10px] text-slate-500 block">Investimento</span>
+                <span className="font-mono font-bold text-white text-sm">
+                  {prop.value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                </span>
+              </div>
+
+              {prop.savingsEstimate && (
+                <div className="text-right">
+                  <span className="text-[10px] text-slate-500 block">Economia Estimada</span>
+                  <span className="text-[11px] font-semibold text-emerald-400">
+                    {prop.savingsEstimate}
+                  </span>
+                </div>
+              )}
+            </div>
+
+            <div className="pt-2 flex items-center justify-between text-[11px] text-slate-400 border-t border-white/[0.04]">
+              <span>Data: {prop.date}</span>
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSelectedProposalForView(prop);
+                }}
+                className="inline-flex items-center gap-1 px-3 py-1 rounded-lg bg-[#162032] text-[#E8A735] font-semibold border border-[#D4A017]/30"
+              >
+                <span>Ver Proposta</span>
+                <ExternalLink className="w-3 h-3" />
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Tabela Tradicional de Propostas para Desktop e Tablet */}
+      <div className="hidden sm:block rounded-xl bg-[#0F1626]/90 border border-white/[0.07] overflow-hidden shadow-sm">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
             <thead>
