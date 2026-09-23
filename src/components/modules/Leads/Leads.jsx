@@ -77,6 +77,35 @@ export const Leads = () => {
     }
   };
 
+  const handleExportCsv = () => {
+    const headers = ['ID', 'Nome', 'Empresa', 'Telefone', 'WhatsApp', 'Email', 'Cidade', 'Tipo', 'Origem', 'Conta Mensal (R$)', 'Responsavel', 'Status', 'Data'];
+    const rows = filteredLeads.map(l => [
+      l.id,
+      `"${l.name}"`,
+      `"${l.company}"`,
+      `"${l.phone}"`,
+      `"${l.whatsapp}"`,
+      `"${l.email}"`,
+      `"${l.city}"`,
+      `"${l.clientType}"`,
+      `"${l.origin}"`,
+      l.monthlyBill,
+      `"${l.responsible}"`,
+      `"${l.status}"`,
+      `"${l.date}"`
+    ]);
+
+    const csvContent = 'data:text/csv;charset=utf-8,\uFEFF' + [headers.join(';'), ...rows.map(r => r.join(';'))].join('\n');
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement('a');
+    link.setAttribute('href', encodedUri);
+    link.setAttribute('download', `leads_vellia_solar_${new Date().toISOString().slice(0, 10)}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    showToast('Base de Leads exportada em CSV com sucesso!');
+  };
+
   return (
     <div className="space-y-5">
       {/* Topo da Tela de Leads */}
@@ -90,13 +119,27 @@ export const Leads = () => {
           </p>
         </div>
 
-        <button
-          onClick={() => setIsNewLeadModalOpen(true)}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] text-slate-950 font-bold text-xs tracking-tight transition-all duration-150 shadow-sm self-start sm:self-auto"
-        >
-          <Plus className="w-4 h-4 stroke-[2.5]" />
-          <span>Novo Lead</span>
-        </button>
+        <div className="flex items-center gap-2.5 self-start sm:self-auto">
+          {/* Botão Exportar CSV */}
+          <button
+            type="button"
+            onClick={handleExportCsv}
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-[#141C2C] hover:bg-[#1A253A] text-slate-300 hover:text-white border border-white/[0.08] text-xs font-semibold transition-all hover:scale-105 active:scale-95 shadow-sm"
+          >
+            <span>Exportar CSV</span>
+          </button>
+
+          <button
+            onClick={() => setIsNewLeadModalOpen(true)}
+            style={{
+              background: 'linear-gradient(180deg, #F3B33D 0%, #D49422 100%)',
+            }}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-slate-950 font-bold text-xs tracking-tight transition-all duration-150 shadow-sm hover:brightness-105 active:scale-95"
+          >
+            <Plus className="w-4 h-4 stroke-[2.5]" />
+            <span>Novo Lead</span>
+          </button>
+        </div>
       </div>
 
       {/* Barra de Filtros e Busca */}

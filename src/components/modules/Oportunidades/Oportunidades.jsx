@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useApp } from '../../../context/AppContext';
 import { Badge } from '../../common/Badge';
+import { OpportunityDetailModal } from './OpportunityDetailModal';
 import {
   GripVertical,
   Plus,
@@ -18,6 +19,7 @@ export const Oportunidades = () => {
   const { opportunities, moveOpportunity, setIsNewLeadModalOpen } = useApp();
   const [draggedOppId, setDraggedOppId] = useState(null);
   const [activeDragOverColumn, setActiveDragOverColumn] = useState(null);
+  const [selectedOpp, setSelectedOpp] = useState(null);
 
   // As 5 colunas obrigatórias
   const columns = [
@@ -134,13 +136,14 @@ export const Oportunidades = () => {
                         key={opp.id}
                         draggable
                         onDragStart={(e) => handleDragStart(e, opp.id)}
-                        className={`p-3.5 rounded-xl bg-[#121B2F] border border-white/[0.08] hover:border-[var(--color-primary)]/50 cursor-grab active:cursor-grabbing transition-all duration-150 shadow-sm group select-none ${
+                        onClick={() => setSelectedOpp(opp)}
+                        className={`p-3.5 rounded-xl bg-[#121B2F] border border-white/[0.08] hover:border-[#D4A017]/60 hover:bg-[#152038] cursor-pointer active:cursor-grabbing transition-all duration-150 shadow-sm group select-none ${
                           isBeingDragged ? 'opacity-40 scale-95' : 'hover:-translate-y-0.5'
                         }`}
                       >
                         {/* Topo do Card: Cliente e Tipo */}
                         <div className="flex items-start justify-between gap-2">
-                          <span className="font-bold text-xs text-white group-hover:text-[var(--color-primary)] transition-colors leading-tight">
+                          <span className="font-bold text-xs text-white group-hover:text-[#E8A735] transition-colors leading-tight">
                             {opp.client}
                           </span>
                           <span className="text-[10px] font-medium text-slate-400 bg-white/[0.04] px-1.5 py-0.5 rounded">
@@ -179,6 +182,13 @@ export const Oportunidades = () => {
           );
         })}
       </div>
+
+      {/* Modal de Detalhes da Oportunidade */}
+      <OpportunityDetailModal
+        isOpen={!!selectedOpp}
+        onClose={() => setSelectedOpp(null)}
+        opportunity={selectedOpp}
+      />
     </div>
   );
 };
