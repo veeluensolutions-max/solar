@@ -1,0 +1,64 @@
+import React from 'react';
+import { LayoutDashboard, UserCheck, Plus, Users, Menu } from 'lucide-react';
+import { useApp } from '../../context/AppContext';
+
+export const MobileBottomBar = () => {
+  const { activeTab, setActiveTab, setIsNewLeadModalOpen, setMobileMenuOpen } = useApp();
+
+  return (
+    <nav className="fixed bottom-0 inset-x-0 z-40 lg:hidden bg-[#0A0D15]/95 backdrop-blur-lg border-t border-white/[0.08] px-4 py-2 flex items-center justify-between select-none">
+      {/* Dashboard */}
+      <button
+        onClick={() => setActiveTab('dashboard')}
+        className={`flex flex-col items-center gap-1 text-[10px] font-medium transition-colors ${
+          activeTab === 'dashboard' ? 'text-[#E8A735]' : 'text-slate-400'
+        }`}
+      >
+        <LayoutDashboard className="w-4 h-4" />
+        <span>Dashboard</span>
+      </button>
+
+      {/* Leads */}
+      <button
+        onClick={() => setActiveTab('leads')}
+        className={`flex flex-col items-center gap-1 text-[10px] font-medium transition-colors ${
+          activeTab === 'leads' ? 'text-[#E8A735]' : 'text-slate-400'
+        }`}
+      >
+        <UserCheck className="w-4 h-4" />
+        <span>Leads</span>
+      </button>
+
+      {/* Botão Central Redondo Dourado com + */}
+      <button
+        onClick={() => setIsNewLeadModalOpen(true)}
+        style={{
+          background: 'linear-gradient(180deg, #F3B33D 0%, #D49422 100%)',
+        }}
+        className="w-10 h-10 -mt-5 rounded-full flex items-center justify-center text-slate-950 font-bold shadow-lg shadow-[#D4A017]/20 active:scale-90 transition-transform"
+      >
+        <Plus className="w-5 h-5 stroke-[2.5]" />
+      </button>
+
+      {/* Clientes */}
+      <button
+        onClick={() => setActiveTab('clientes')}
+        className={`flex flex-col items-center gap-1 text-[10px] font-medium transition-colors ${
+          activeTab === 'clientes' ? 'text-[#E8A735]' : 'text-slate-400'
+        }`}
+      >
+        <Users className="w-4 h-4" />
+        <span>Clientes</span>
+      </button>
+
+      {/* Mais / Menu Hambúrguer */}
+      <button
+        onClick={() => setMobileMenuOpen(true)}
+        className="flex flex-col items-center gap-1 text-[10px] font-medium text-slate-400 hover:text-white transition-colors"
+      >
+        <Menu className="w-4 h-4" />
+        <span>Mais</span>
+      </button>
+    </nav>
+  );
+};
