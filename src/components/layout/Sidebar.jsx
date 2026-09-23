@@ -9,7 +9,8 @@ import {
   BarChart3,
   Settings,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  LogOut
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { VelliaLogo } from '../common/VelliaLogo';
@@ -21,6 +22,7 @@ export const Sidebar = () => {
     sidebarCollapsed,
     setSidebarCollapsed,
     settings,
+    logout
   } = useApp();
 
   const menuItems = [
@@ -99,20 +101,38 @@ export const Sidebar = () => {
         </nav>
       </div>
 
-      {/* Rodapé da Sidebar: Selo DEMONSTRAÇÃO e Versão idênticos ao laptop */}
+      {/* Rodapé da Sidebar: Selo DEMONSTRAÇÃO e Botão de Logout */}
       <div className="p-4 border-t border-white/[0.05] bg-[#07090F]">
         {!sidebarCollapsed ? (
-          <div className="flex flex-col items-start gap-1.5">
-            <span className="inline-block px-2.5 py-0.5 rounded text-[10px] font-bold text-[#E8A735] border border-[#D4A017]/40 tracking-wider uppercase bg-[#D4A017]/10">
-              DEMONSTRAÇÃO
-            </span>
-            <span className="text-[11px] text-slate-500 font-mono">
-              Vellia Solar Private v1.0.0
-            </span>
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex flex-col items-start gap-1">
+              <span className="inline-block px-2.5 py-0.5 rounded text-[10px] font-bold text-[#E8A735] border border-[#D4A017]/40 tracking-wider uppercase bg-[#D4A017]/10">
+                DEMONSTRAÇÃO
+              </span>
+              <span className="text-[11px] text-slate-500 font-mono">
+                Vellia Solar v1.0.0
+              </span>
+            </div>
+
+            {/* Botão Sair / Logout */}
+            <button
+              onClick={logout}
+              title="Encerrar Sessão / Voltar ao Login"
+              className="p-2 rounded-lg text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 transition-colors"
+            >
+              <LogOut className="w-4 h-4" />
+            </button>
           </div>
         ) : (
-          <div className="flex justify-center">
+          <div className="flex flex-col items-center gap-3">
             <span className="w-2.5 h-2.5 rounded-full bg-[#E8A735] animate-pulse" />
+            <button
+              onClick={logout}
+              title="Sair"
+              className="p-1.5 rounded-lg text-slate-500 hover:text-rose-400"
+            >
+              <LogOut className="w-3.5 h-3.5" />
+            </button>
           </div>
         )}
       </div>

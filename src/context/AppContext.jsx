@@ -20,6 +20,22 @@ const DEFAULT_SETTINGS = {
 };
 
 export const AppProvider = ({ children }) => {
+  // Autenticação e tela de login moderna
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    const savedAuth = localStorage.getItem('vellia_solar_auth');
+    return savedAuth ? savedAuth === 'true' : false; // Inicia na tela de login bonita
+  });
+
+  const login = () => {
+    setIsAuthenticated(true);
+    localStorage.setItem('vellia_solar_auth', 'true');
+  };
+
+  const logout = () => {
+    setIsAuthenticated(false);
+    localStorage.setItem('vellia_solar_auth', 'false');
+  };
+
   // Tela ativa
   const [activeTab, setActiveTab] = useState('dashboard');
 
@@ -218,6 +234,9 @@ export const AppProvider = ({ children }) => {
   return (
     <AppContext.Provider
       value={{
+        isAuthenticated,
+        login,
+        logout,
         activeTab,
         setActiveTab,
         sidebarCollapsed,

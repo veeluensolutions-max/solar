@@ -12,7 +12,8 @@ import {
   Users,
   CheckCircle,
   X,
-  Sparkles
+  Sparkles,
+  LogOut
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { CustomizationModal } from '../common/CustomizationModal';
@@ -26,13 +27,15 @@ export const Header = () => {
     proposals,
     clients,
     setActiveTab,
-    showToast
+    showToast,
+    logout
   } = useApp();
 
   const [isCustomModalOpen, setIsCustomModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
 
   const searchRef = useRef(null);
   const notificationRef = useRef(null);
@@ -283,20 +286,51 @@ export const Header = () => {
             )}
           </div>
 
-          {/* Perfil do Usuário */}
-          <div className="flex items-center gap-2 cursor-pointer select-none group">
-            <div className="w-8 h-8 rounded-full bg-slate-700/80 border border-white/10 flex items-center justify-center text-xs font-bold text-amber-200 group-hover:border-[#D4A017] transition-colors">
-              L
+          {/* Perfil do Usuário com Dropdown e Logout */}
+          <div className="relative">
+            <div
+              onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+              className="flex items-center gap-2 cursor-pointer select-none group p-1 rounded-xl hover:bg-white/[0.04] transition-colors"
+            >
+              <div className="w-8 h-8 rounded-full bg-slate-700/80 border border-white/10 flex items-center justify-center text-xs font-bold text-amber-200 group-hover:border-[#D4A017] transition-colors">
+                L
+              </div>
+              <div className="hidden sm:block text-left">
+                <span className="text-xs font-semibold text-white block leading-tight">
+                  Lucas
+                </span>
+                <span className="text-[10px] text-slate-400 block leading-tight">
+                  Integrador
+                </span>
+              </div>
+              <ChevronDown className="w-3.5 h-3.5 text-slate-500 group-hover:text-slate-300 transition-colors hidden sm:block" />
             </div>
-            <div className="hidden sm:block text-left">
-              <span className="text-xs font-semibold text-white block leading-tight">
-                Lucas
-              </span>
-              <span className="text-[10px] text-slate-400 block leading-tight">
-                Integrador
-              </span>
-            </div>
-            <ChevronDown className="w-3.5 h-3.5 text-slate-500 group-hover:text-slate-300 transition-colors hidden sm:block" />
+
+            {/* Menu Dropdown do Perfil */}
+            {isUserMenuOpen && (
+              <div className="absolute right-0 mt-2 w-56 rounded-2xl bg-[#0D121F] border border-white/10 shadow-2xl p-2 z-50 animate-in fade-in zoom-in-95 duration-150 text-xs">
+                <div className="p-2 border-b border-white/[0.06]">
+                  <span className="font-bold text-white block">Lucas Mendes</span>
+                  <span className="text-[11px] text-slate-400 block mt-0.5 truncate">lucas@veeluensolutions.com</span>
+                  <span className="inline-block mt-1.5 text-[10px] font-semibold text-[#E8A735] bg-[#D4A017]/15 px-2 py-0.5 rounded">
+                    Administrador
+                  </span>
+                </div>
+
+                <div className="pt-1">
+                  <button
+                    onClick={() => {
+                      setIsUserMenuOpen(false);
+                      logout();
+                    }}
+                    className="w-full text-left p-2 rounded-xl text-rose-400 hover:text-white hover:bg-rose-500/15 transition-colors flex items-center gap-2 font-medium"
+                  >
+                    <LogOut className="w-4 h-4" />
+                    <span>Encerrar Sessão / Logout</span>
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Botão + Novo Lead Dourado */}

@@ -6,6 +6,8 @@ import { MobileNav } from './components/layout/MobileNav';
 import { MobileBottomBar } from './components/layout/MobileBottomBar';
 import { Toast } from './components/common/Toast';
 
+import { LoginScreen } from './components/modules/Auth/LoginScreen';
+
 import { Dashboard } from './components/modules/Dashboard/Dashboard';
 import { Leads } from './components/modules/Leads/Leads';
 import { Oportunidades } from './components/modules/Oportunidades/Oportunidades';
@@ -18,7 +20,17 @@ import { Configuracoes } from './components/modules/Configuracoes/Configuracoes'
 import { NewLeadModal } from './components/modules/Leads/NewLeadModal';
 
 const MainContent = () => {
-  const { activeTab, isNewLeadModalOpen, setIsNewLeadModalOpen } = useApp();
+  const { isAuthenticated, login, activeTab, isNewLeadModalOpen, setIsNewLeadModalOpen } = useApp();
+
+  // Se não estiver autenticado, exibe a tela de login moderna com glassmorphism
+  if (!isAuthenticated) {
+    return (
+      <>
+        <LoginScreen onLoginSuccess={login} />
+        <Toast />
+      </>
+    );
+  }
 
   const renderModule = () => {
     switch (activeTab) {
