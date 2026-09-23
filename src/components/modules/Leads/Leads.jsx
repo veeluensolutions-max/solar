@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { useApp } from '../../../context/AppContext';
 import { Badge } from '../../common/Badge';
+import { WhatsAppModal } from './WhatsAppModal';
 import {
   Plus,
   Search,
@@ -20,6 +21,7 @@ export const Leads = () => {
   const [activeFilter, setActiveFilter] = useState('Todos');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedLeadForActions, setSelectedLeadForActions] = useState(null);
+  const [selectedLeadForWhatsApp, setSelectedLeadForWhatsApp] = useState(null);
 
   const filters = ['Todos', 'Novos', 'Em atendimento', 'Qualificados', 'Sem retorno'];
 
@@ -204,16 +206,15 @@ export const Leads = () => {
                     {/* Ações */}
                     <td className="py-3.5 px-4 text-right">
                       <div className="flex items-center justify-end gap-2">
-                        {/* Botão WhatsApp Direto */}
-                        <a
-                          href={`https://wa.me/55${lead.whatsapp || lead.phone.replace(/\D/g, '')}?text=Ol%C3%A1%20${encodeURIComponent(lead.name)}%2C%20tudo%20bem%3F%20Aqui%20%C3%A9%20da%20equipe%20comercial%20de%20energia%20solar.`}
-                          target="_blank"
-                          rel="noreferrer"
-                          title="Falar no WhatsApp"
-                          className="p-1.5 rounded-lg bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 border border-emerald-500/20 transition-colors"
+                        {/* Botão Disparador WhatsApp Inteligente */}
+                        <button
+                          type="button"
+                          onClick={() => setSelectedLeadForWhatsApp(lead)}
+                          title="Disparar mensagem no WhatsApp com modelos prontos"
+                          className="p-1.5 rounded-lg bg-emerald-500/15 text-emerald-400 hover:bg-emerald-500/30 border border-emerald-500/30 transition-all hover:scale-105 active:scale-95"
                         >
-                          <MessageCircle className="w-3.5 h-3.5" />
-                        </a>
+                          <MessageCircle className="w-3.5 h-3.5 stroke-[2.5]" />
+                        </button>
 
                         {/* Menu de alteração de status rápida */}
                         <div className="relative inline-block text-left">
@@ -254,6 +255,13 @@ export const Leads = () => {
           </table>
         </div>
       </div>
+
+      {/* Modal de Disparo de WhatsApp com Modelos */}
+      <WhatsAppModal
+        isOpen={!!selectedLeadForWhatsApp}
+        onClose={() => setSelectedLeadForWhatsApp(null)}
+        lead={selectedLeadForWhatsApp}
+      />
     </div>
   );
 };

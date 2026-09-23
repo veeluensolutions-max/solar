@@ -177,6 +177,19 @@ export const AppProvider = ({ children }) => {
     showToast('Compromisso adicionado à agenda.');
   };
 
+  const toggleScheduleStatus = (itemId) => {
+    setSchedule(prev =>
+      prev.map(item => {
+        if (item.id === itemId) {
+          const nextStatus = item.status === 'Concluído' ? 'Pendente' : 'Concluído';
+          showToast(nextStatus === 'Concluído' ? 'Compromisso concluído com sucesso!' : 'Compromisso reaberto como pendente.');
+          return { ...item, status: nextStatus };
+        }
+        return item;
+      })
+    );
+  };
+
   const updateSettings = (newSettings) => {
     setSettings(prev => ({ ...prev, ...newSettings }));
     showToast('Identidade visual e preferências atualizadas!');
@@ -230,6 +243,7 @@ export const AppProvider = ({ children }) => {
         clients,
         schedule,
         addScheduleItem,
+        toggleScheduleStatus,
         metrics: initialMetrics,
         toastMessage,
         showToast,
